@@ -36,10 +36,14 @@ def load_calendar(year=None):
     if year is None:
         year = datetime.now().year
     
+    # Zorg dat calendar directory bestaat
+    CALENDAR_DIR.mkdir(parents=True, exist_ok=True)
+    
     calendar_file = CALENDAR_DIR / f"calendar_{year}.json"
     
     if not calendar_file.exists():
         logger.warning(f"Kalender voor {year} niet gevonden: {calendar_file}")
+        logger.info("Voer eerst 'python scripts/fetch_calendar.py' uit om de kalender op te halen")
         return None
     
     with open(calendar_file, 'r', encoding='utf-8') as f:
@@ -326,12 +330,16 @@ def check_and_download_statistics():
         
         # Bepaal laatst gedownloade versie
         download_dir = Path(stat.get('download_directory', 'data/downloads'))
+        
+        # Zorg dat directory bestaat (voor eerste keer)
+        download_dir.mkdir(parents=True, exist_ok=True)
+        
         latest_downloaded_file, latest_downloaded_periode = get_latest_downloaded_version(stat, download_dir)
         
         if latest_downloaded_file:
             logger.info(f"Laatst gedownloade versie: {latest_downloaded_file.name}")
         else:
-            logger.info(f"Geen gedownloade versies gevonden voor {kalender_naam}")
+            logger.info(f"Geen gedownloade versies gevonden voor {kalender_naam} (eerste keer of directory leeg)")
         
         # Vergelijk periodes
         available_periode_value = latest_available['periode_value']
@@ -385,6 +393,9 @@ def check_and_download_statistics():
         ext = Path(parsed_url.path).suffix or '.zip'
         
         output_path = download_dir / f"{filename}{ext}"
+        
+        # Zorg dat directory bestaat voordat we downloaden
+        output_path.parent.mkdir(parents=True, exist_ok=True)
         
         # Download alleen als bestand nog niet bestaat
         if not output_path.exists():
