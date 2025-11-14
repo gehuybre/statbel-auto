@@ -227,7 +227,7 @@ def get_latest_available_version(entries, today):
                     'datum': datum,
                     'periode': periode,
                     'periode_value': periode_value,
-                    'entry': entry['entry']
+                    'entry': entry.get('entry', entry)  # Fallback naar entry zelf als 'entry' key niet bestaat
                 })
     
     if not available_entries:
