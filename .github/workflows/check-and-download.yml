@@ -1,0 +1,43 @@
+name: Check and Download Statistics
+
+on:
+  schedule:
+    # Voer dagelijks uit om te controleren op nieuwe publicaties
+    - cron: '0 8 * * *'  # Elke dag om 8:00 UTC
+  workflow_dispatch:  # Handmatig kunnen triggeren
+
+jobs:
+  check-and-download:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Vereist om te kunnen pushen
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4 pyyaml
+      
+      - name: Check and download statistics
+        run: |
+          python scripts/check_and_download.py
+      
+      - name: Commit downloaded files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/downloads/
+          git diff --staged --quiet || git commit -m "Download statistics - $(date +%Y-%m-%d)"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

@@ -1,0 +1,43 @@
+name: Fetch Publication Calendar
+
+on:
+  schedule:
+    # Voer uit op 1 januari van elk jaar om de nieuwe kalender op te halen
+    - cron: '0 0 1 1 *'
+  workflow_dispatch:  # Handmatig kunnen triggeren
+
+jobs:
+  fetch-calendar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Vereist om te kunnen pushen
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4 pyyaml
+      
+      - name: Fetch calendar
+        run: |
+          python scripts/fetch_calendar.py
+      
+      - name: Commit and push calendar
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/calendar/
+          git diff --staged --quiet || git commit -m "Update publication calendar for $(date +%Y)"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

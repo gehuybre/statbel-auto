@@ -1,0 +1,51 @@
+statistieken:
+  - naam: Statbel, bouwvergunningen
+    kalender_naam: Bouwvergunningen  # Naam zoals deze voorkomt op de publicatiekalender
+    url: https://statbel.fgov.be/sites/default/files/files/opendata/Building%20permits/TF_BUILDING_PERMITS.zip
+    url_pattern: null  # Optioneel: patroon om URL dynamisch te construeren (bijv. met datum)
+    metadata:
+      - veld: Naam/Nom/Name
+        beschrijving: Beschrijving
+      - veld: REFNIS
+        beschrijving: Refnis-code
+      - veld: REFNIS_NL
+        beschrijving: Omschrijving NL Refnis-code
+      - veld: REFNIS_FR
+        beschrijving: Omschrijving FR Refnis-code
+      - veld: CD_YEAR
+        beschrijving: Jaar
+      - veld: CD_PERIOD
+        beschrijving: Maand
+      - veld: MS_BUILDING_RES_NEW
+        beschrijving: Aantal gebouwen - Residentieel - Nieuwbouw
+      - veld: MS_DWELLING_RES_NEW
+        beschrijving: Aantal woningen - Residentieel - Nieuwbouw
+      - veld: MS_APARTMENT_RES_NEW
+        beschrijving: Aantal flats - Residentieel - Nieuwbouw
+      - veld: MS_SINGLE_HOUSE_RES_NEW
+        beschrijving: Aantal gebouwen met één woning - Residentieel - Nieuwbouw
+      - veld: MS_TOTAL_SURFACE_RES_NEW
+        beschrijving: Totale oppervlakte (m²) - Residentieel - Nieuwbouw
+      - veld: MS_BUILDING_RES_RENOVATION
+        beschrijving: Aantal gebouwen - Residentieel - Renovatie
+      - veld: MS_BUILDING_NONRES_NEW
+        beschrijving: Aantal gebouwen - Niet-Residentieel - Nieuwbouw
+      - veld: MS_VOLUME_NONRES_NEW
+        beschrijving: Volume (m³) - Niet-Residentieel - Nieuwbouw
+      - veld: MS_BUILDING_NONRES_RENOVATION
+        beschrijving: Aantal gebouwen - Niet-Residentieel - Renovatie
+      - veld: CD_REFNIS_NATION
+        beschrijving: Refnis-code Land
+      - veld: CD_REFNIS_REGION
+        beschrijving: Refnis-code Gewest
+      - veld: CD_REFNIS_PROVINCE
+        beschrijving: Refnis-code Provincie
+      - veld: CD_REFNIS_DISTRICT
+        beschrijving: Refnis-code Arrondissement
+      - veld: CD_REFNIS_MUNICIPALITY
+        beschrijving: Refnis-code Gemeente
+      - veld: CD_REFNIS_LEVEL
+        beschrijving: Niveau Refnis-code
+    data_type: txt file with delimiter "|"
+    publicatie_frequentie: monthly  # monthly, quarterly, yearly, weekly
+    download_directory: data/bouwvergunningen  # Waar de gedownloade bestanden worden opgeslagen
