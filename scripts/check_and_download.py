@@ -284,6 +284,11 @@ def download_file(url, output_path):
 
 def check_and_download_statistics():
     """Hoofdfunctie: controleer kalender en download statistieken."""
+    # Versie 2.0 - Nieuwe logica met versie vergelijking
+    logger.info("=" * 60)
+    logger.info("Auto-Statbel Download Script - Versie 2.0")
+    logger.info("=" * 60)
+    
     # Laad configuratie
     config = load_config()
     if not config or 'statistieken' not in config:
