@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Auto-Statbel
 
 Automatisch downloaden en verwerken van Statbel statistieken op basis van de publicatiekalender.
@@ -106,3 +107,6 @@ Je kunt ze ook handmatig triggeren via de GitHub Actions tab.
 
 CC BY 4.0 (zoals Statbel data)
 
+=======
+# statbel-auto
+>>>>>>> ef027962d557dfd5131010c978e5c9bd5dbfa45a
