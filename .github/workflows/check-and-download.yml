@@ -4,7 +4,7 @@ on:
   schedule:
     # Voer dagelijks uit om te controleren op nieuwe publicaties
     - cron: '0 8 * * *'  # Elke dag om 8:00 UTC
-  workflow_dispatch:  # Handmatig kunnen triggeren
+  workflow_dispatch:  # Handmatig kunnen triggeren - versie 2.0
 
 jobs:
   check-and-download:
