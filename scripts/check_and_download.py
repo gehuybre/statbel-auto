@@ -119,6 +119,120 @@ def find_statistic_in_calendar(statistic_name, calendar_data):
     return None
 
 
+def find_all_statistic_entries_in_calendar(statistic_name, calendar_data):
+    """Zoek alle entries voor een statistiek in de kalender."""
+    if not calendar_data or 'entries' not in calendar_data:
+        return []
+    
+    statistic_name_lower = statistic_name.lower().strip()
+    entries = []
+    
+    for entry in calendar_data['entries']:
+        entry_naam = entry.get('naam', '').lower().strip()
+        # Exacte match of fuzzy match
+        if (entry_naam == statistic_name_lower or 
+            statistic_name_lower in entry_naam or 
+            entry_naam in statistic_name_lower):
+            datum = parse_datum_text(entry.get('datum_text', ''))
+            if datum:  # Alleen entries met geldige datum
+                entries.append({
+                    'datum': datum,
+                    'periode': entry.get('periode', ''),
+                    'entry': entry
+                })
+    
+    return sorted(entries, key=lambda x: x['datum'], reverse=True)  # Nieuwste eerst
+
+
+def parse_periode(periode_str):
+    """Parse periode string (bijv. 'm-2025-08', 'y-2024', 't-2025-03') naar vergelijkbare waarde."""
+    if not periode_str:
+        return None
+    
+    # Format: prefix-jaar-nummer (m-2025-08, y-2024, t-2025-03)
+    pattern = r'([mytq])-(\d{4})(?:-(\d{1,2}))?'
+    match = re.match(pattern, periode_str.lower())
+    
+    if match:
+        prefix = match.group(1)
+        jaar = int(match.group(2))
+        nummer = int(match.group(3)) if match.group(3) else 0
+        
+        # Maak een vergelijkbare waarde: jaar * 1000 + nummer * 10 + prefix waarde
+        prefix_value = {'y': 4, 't': 3, 'q': 2, 'm': 1}.get(prefix, 0)
+        return jaar * 10000 + nummer * 100 + prefix_value
+    
+    return None
+
+
+def get_latest_downloaded_version(stat, download_dir):
+    """Bepaal de laatst gedownloade versie voor een statistiek."""
+    download_path = Path(download_dir)
+    
+    if not download_path.exists():
+        return None, None
+    
+    # Zoek alle bestanden voor deze statistiek (zip, csv, txt)
+    stat_name_lower = stat.get('naam', '').replace(' ', '_').lower()
+    patterns = [
+        f"{stat_name_lower}_*.zip",
+        f"{stat_name_lower}_*.csv",
+        f"{stat_name_lower}_*.txt"
+    ]
+    
+    latest_periode = None
+    latest_file = None
+    
+    for pattern in patterns:
+        for file_path in download_path.glob(pattern):
+            # Extract datum uit bestandsnaam: statbel_bouwvergunningen_20251201.zip
+            filename = file_path.stem
+            # Zoek datum patroon: YYYYMMDD
+            date_match = re.search(r'(\d{8})$', filename)
+            
+            if date_match:
+                date_str = date_match.group(1)
+                try:
+                    file_date = datetime.strptime(date_str, '%Y%m%d')
+                    # Gebruik de datum als proxy voor periode
+                    # Voor maandelijkse data: YYYYMM
+                    periode_value = int(date_str[:6])  # YYYYMM
+                    
+                    if latest_periode is None or periode_value > latest_periode:
+                        latest_periode = periode_value
+                        latest_file = file_path
+                except ValueError:
+                    continue
+    
+    return latest_file, latest_periode
+
+
+def get_latest_available_version(entries, today):
+    """Bepaal de nieuwste beschikbare versie volgens de kalender."""
+    available_entries = []
+    
+    for entry in entries:
+        datum = entry['datum']
+        periode = entry.get('periode', '')
+        
+        # Alleen entries die vandaag of in het verleden zijn gepubliceerd
+        if datum <= today:
+            periode_value = parse_periode(periode)
+            if periode_value:
+                available_entries.append({
+                    'datum': datum,
+                    'periode': periode,
+                    'periode_value': periode_value,
+                    'entry': entry['entry']
+                })
+    
+    if not available_entries:
+        return None
+    
+    # Sorteer op periode waarde (hoogste = nieuwste)
+    return max(available_entries, key=lambda x: x['periode_value'])
+
+
 def construct_url(url_pattern, calendar_entry):
     """Construeer URL op basis van patroon en kalender entry."""
     if not url_pattern:
@@ -178,63 +292,109 @@ def check_and_download_statistics():
         logger.error("Kon kalender niet laden")
         return
     
-    # Vind aankomende publicaties
-    upcoming = find_upcoming_publications(calendar_data, days_ahead=7)
-    logger.info(f"Gevonden {len(upcoming)} aankomende publicaties")
+    today = datetime.now()
+    logger.info(f"Controleren statistieken op {today.date()}")
     
     # Voor elke statistiek in config
     for stat in config['statistieken']:
         kalender_naam = stat.get('kalender_naam')
+        stat_naam = stat.get('naam', 'Unknown')
+        
         if not kalender_naam:
-            logger.warning(f"Geen kalender_naam voor statistiek: {stat.get('naam')}")
+            logger.warning(f"Geen kalender_naam voor statistiek: {stat_naam}")
             continue
         
-        # Zoek in kalender
-        calendar_entry = find_statistic_in_calendar(kalender_naam, calendar_data)
+        logger.info(f"\n=== Controleren: {stat_naam} ===")
         
-        if calendar_entry:
-            datum = parse_datum_text(calendar_entry.get('datum_text', ''))
-            today = datetime.now()
-            
-            # Check of publicatie vandaag of in het verleden is
-            if datum and datum <= today:
-                logger.info(f"Publicatie gevonden voor {kalender_naam} op {datum.date()}")
-                
-                # Bepaal URL (statisch of via patroon)
-                url = stat.get('url')
-                url_pattern = stat.get('url_pattern')
-                
-                if url_pattern:
-                    url = construct_url(url_pattern, calendar_entry)
-                    if not url:
-                        logger.warning(f"Kon URL niet construeren voor {kalender_naam} met patroon {url_pattern}")
-                        continue
-                
-                if url:
-                    download_dir = Path(stat.get('download_directory', 'data/downloads'))
-                    filename = f"{stat.get('naam', 'unknown').replace(' ', '_').lower()}_{datum.strftime('%Y%m%d')}"
-                    
-                    # Bepaal extensie van URL
-                    parsed_url = urlparse(url)
-                    ext = Path(parsed_url.path).suffix or '.zip'
-                    
-                    output_path = download_dir / f"{filename}{ext}"
-                    
-                    # Download alleen als bestand nog niet bestaat
-                    if not output_path.exists():
-                        success = download_file(url, output_path)
-                        if success:
-                            logger.info(f"Succesvol gedownload: {output_path}")
-                        else:
-                            logger.error(f"Download mislukt voor {kalender_naam}")
-                    else:
-                        logger.info(f"Bestand bestaat al: {output_path}")
-                else:
-                    logger.warning(f"Geen URL gevonden voor {kalender_naam}")
-            else:
-                logger.info(f"Publicatie voor {kalender_naam} is nog niet beschikbaar (datum: {datum})")
+        # Vind alle entries voor deze statistiek in de kalender
+        calendar_entries = find_all_statistic_entries_in_calendar(kalender_naam, calendar_data)
+        
+        if not calendar_entries:
+            logger.warning(f"Geen kalender entries gevonden voor: {kalender_naam}")
+            continue
+        
+        logger.info(f"Gevonden {len(calendar_entries)} kalender entries voor {kalender_naam}")
+        
+        # Bepaal nieuwste beschikbare versie volgens kalender
+        latest_available = get_latest_available_version(calendar_entries, today)
+        
+        if not latest_available:
+            logger.info(f"Geen beschikbare versies voor {kalender_naam} (alle publicaties zijn in de toekomst)")
+            continue
+        
+        logger.info(f"Nieuwste beschikbare versie volgens kalender: periode {latest_available['periode']}, datum {latest_available['datum'].date()}")
+        
+        # Bepaal laatst gedownloade versie
+        download_dir = Path(stat.get('download_directory', 'data/downloads'))
+        latest_downloaded_file, latest_downloaded_periode = get_latest_downloaded_version(stat, download_dir)
+        
+        if latest_downloaded_file:
+            logger.info(f"Laatst gedownloade versie: {latest_downloaded_file.name}")
         else:
-            logger.debug(f"Geen kalender entry gevonden voor {kalender_naam}")
+            logger.info(f"Geen gedownloade versies gevonden voor {kalender_naam}")
+        
+        # Vergelijk periodes
+        available_periode_value = latest_available['periode_value']
+        downloaded_periode_value = latest_downloaded_periode if latest_downloaded_periode else 0
+        
+        # Voor nu gebruiken we de datum als proxy (YYYYMM)
+        available_date_value = int(latest_available['datum'].strftime('%Y%m'))
+        
+        if latest_downloaded_file:
+            # Extract datum uit bestandsnaam
+            filename = latest_downloaded_file.stem
+            date_match = re.search(r'(\d{8})$', filename)
+            if date_match:
+                downloaded_date_value = int(date_match.group(1)[:6])  # YYYYMM
+            else:
+                downloaded_date_value = 0
+        else:
+            downloaded_date_value = 0
+        
+        # Check of we up-to-date zijn
+        if downloaded_date_value >= available_date_value:
+            logger.info(f"✓ Up-to-date: gedownloade versie ({downloaded_date_value}) >= beschikbare versie ({available_date_value})")
+            continue
+        
+        logger.info(f"✗ Niet up-to-date: gedownloade versie ({downloaded_date_value}) < beschikbare versie ({available_date_value})")
+        logger.info(f"Downloaden nieuwe versie...")
+        
+        # Download de nieuwste versie
+        calendar_entry = latest_available['entry']
+        datum = latest_available['datum']
+        
+        # Bepaal URL (statisch of via patroon)
+        url = stat.get('url')
+        url_pattern = stat.get('url_pattern')
+        
+        if url_pattern:
+            url = construct_url(url_pattern, calendar_entry)
+            if not url:
+                logger.warning(f"Kon URL niet construeren voor {kalender_naam} met patroon {url_pattern}")
+                continue
+        
+        if not url:
+            logger.warning(f"Geen URL gevonden voor {kalender_naam}")
+            continue
+        
+        # Maak bestandsnaam
+        filename = f"{stat.get('naam', 'unknown').replace(' ', '_').lower()}_{datum.strftime('%Y%m%d')}"
+        
+        # Bepaal extensie van URL
+        parsed_url = urlparse(url)
+        ext = Path(parsed_url.path).suffix or '.zip'
+        
+        output_path = download_dir / f"{filename}{ext}"
+        
+        # Download alleen als bestand nog niet bestaat
+        if not output_path.exists():
+            success = download_file(url, output_path)
+            if success:
+                logger.info(f"✓ Succesvol gedownload: {output_path}")
+            else:
+                logger.error(f"✗ Download mislukt voor {kalender_naam}")
+        else:
+            logger.info(f"Bestand bestaat al: {output_path}")
 
 
 if __name__ == "__main__":
