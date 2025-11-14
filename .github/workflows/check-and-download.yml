@@ -35,13 +35,17 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          # Maak directories aan als ze niet bestaan
-          mkdir -p data/downloads
-          # Voeg alleen bestanden toe die daadwerkelijk bestaan
-          if [ -n "$(find data/downloads -type f 2>/dev/null)" ]; then
-            git add data/downloads/
-            git commit -m "Download statistics - $(date +%Y-%m-%d)" || echo "No changes to commit"
-            git push
+          # Check if there are any files in data/ subdirectories
+          if find data/ -type f -name "*.zip" -o -name "*.csv" -o -name "*.txt" 2>/dev/null | grep -q .; then
+            # Add all files in data/ directories
+            find data/ -type f \( -name "*.zip" -o -name "*.csv" -o -name "*.txt" \) -exec git add {} \;
+            # Check if there are staged changes before committing
+            if ! git diff --staged --quiet; then
+              git commit -m "Download statistics - $(date +%Y-%m-%d)"
+              git push
+            else
+              echo "No changes to commit"
+            fi
           else
             echo "No files downloaded, skipping commit"
           fi
