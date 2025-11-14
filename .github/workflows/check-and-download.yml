@@ -35,19 +35,36 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          # Check if there are any files in data/ subdirectories
-          if find data/ -type f -name "*.zip" -o -name "*.csv" -o -name "*.txt" 2>/dev/null | grep -q .; then
-            # Add all files in data/ directories
-            find data/ -type f \( -name "*.zip" -o -name "*.csv" -o -name "*.txt" \) -exec git add {} \;
-            # Check if there are staged changes before committing
-            if ! git diff --staged --quiet; then
-              git commit -m "Download statistics - $(date +%Y-%m-%d)"
-              git push
-            else
-              echo "No changes to commit"
+          
+          # Check if data directory exists, if not exit early
+          if [ ! -d "data" ]; then
+            echo "No data directory found, skipping commit"
+            exit 0
+          fi
+          
+          # Find all downloaded files (zip, csv, txt) in data/ subdirectories
+          # Use -print0 and xargs for safer handling of filenames with spaces
+          FILES_FOUND=0
+          
+          while IFS= read -r -d '' file; do
+            if [ -f "$file" ]; then
+              echo "Adding file: $file"
+              git add "$file"
+              FILES_FOUND=1
             fi
-          else
+          done < <(find data/ -type f \( -name "*.zip" -o -name "*.csv" -o -name "*.txt" \) -print0 2>/dev/null)
+          
+          if [ $FILES_FOUND -eq 0 ]; then
             echo "No files downloaded, skipping commit"
+            exit 0
+          fi
+          
+          # Check if there are staged changes before committing
+          if ! git diff --staged --quiet; then
+            git commit -m "Download statistics - $(date +%Y-%m-%d)"
+            git push
+          else
+            echo "No changes to commit"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
