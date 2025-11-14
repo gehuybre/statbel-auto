@@ -35,9 +35,16 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add data/downloads/
-          git diff --staged --quiet || git commit -m "Download statistics - $(date +%Y-%m-%d)"
-          git push
+          # Maak directories aan als ze niet bestaan
+          mkdir -p data/downloads
+          # Voeg alleen bestanden toe die daadwerkelijk bestaan
+          if [ -n "$(find data/downloads -type f 2>/dev/null)" ]; then
+            git add data/downloads/
+            git commit -m "Download statistics - $(date +%Y-%m-%d)" || echo "No changes to commit"
+            git push
+          else
+            echo "No files downloaded, skipping commit"
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

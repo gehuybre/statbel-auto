@@ -35,9 +35,16 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add data/calendar/
-          git diff --staged --quiet || git commit -m "Update publication calendar for $(date +%Y)"
-          git push
+          # Maak directory aan als deze niet bestaat
+          mkdir -p data/calendar
+          # Voeg alleen bestanden toe die daadwerkelijk bestaan
+          if [ -n "$(find data/calendar -type f 2>/dev/null)" ]; then
+            git add data/calendar/
+            git diff --staged --quiet || git commit -m "Update publication calendar for $(date +%Y)"
+            git push || echo "No changes to push"
+          else
+            echo "No calendar files found, skipping commit"
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
