@@ -1,0 +1,293 @@
+{
+  "source_url": "https://statbel.fgov.be/nl/calendar",
+  "fetched_at": "2026-01-01T01:00:43.020510",
+  "year": 2026,
+  "entries": [
+    {
+      "datum_text": "7 januari 2026",
+      "naam": "Omzet in de groothandel",
+      "periode": "m-2025-10"
+    },
+    {
+      "datum_text": "15 januari 2026",
+      "naam": "Sterfte",
+      "periode": "m-2025-12"
+    },
+    {
+      "datum_text": "15 januari 2026",
+      "naam": "Maandelijks indexcijfer van de landbouwprijzen en gemiddelde maandelijkse prijzen (output- en input-)",
+      "periode": "m-2025-11"
+    },
+    {
+      "datum_text": "22 januari 2026",
+      "naam": "Maandevolutie van de btw-plichtige ondernemingen",
+      "periode": "m-2025-11"
+    },
+    {
+      "datum_text": "28 januari 2026",
+      "naam": "Omzet en investeringen volgens BTW-aangiften",
+      "periode": "t-2025-03"
+    },
+    {
+      "datum_text": "29 januari 2026",
+      "naam": "Consumptieprijsindex – Gezondheidsindex",
+      "periode": "m-2026-01"
+    },
+    {
+      "datum_text": "10 februari 2026",
+      "naam": "Maandelijks indexcijfer van de landbouwprijzen en gemiddelde maandelijkse prijzen (output- en input-)",
+      "periode": "m-2025-12"
+    },
+    {
+      "datum_text": "18 februari 2026",
+      "naam": "Sterfte",
+      "periode": "m-2026-01"
+    },
+    {
+      "datum_text": "25 februari 2026",
+      "naam": "Geboorten",
+      "periode": "m-2025-11+12"
+    },
+    {
+      "datum_text": "26 februari 2026",
+      "naam": "Huwelijken",
+      "periode": "y-2024"
+    },
+    {
+      "datum_text": "26 februari 2026",
+      "naam": "Echtscheidingen",
+      "periode": "y-2024"
+    },
+    {
+      "datum_text": "26 februari 2026",
+      "naam": "Consumptieprijsindex – Gezondheidsindex",
+      "periode": "m-2026-02"
+    },
+    {
+      "datum_text": "27 februari 2026",
+      "naam": "Maandevolutie van de btw-plichtige ondernemingen",
+      "periode": "m-2025-12"
+    },
+    {
+      "datum_text": "5 maart 2026",
+      "naam": "Structuur en verdeling van de lonen",
+      "periode": "y-2023"
+    },
+    {
+      "datum_text": "10 maart 2026",
+      "naam": "Maandelijks indexcijfer van de landbouwprijzen en gemiddelde maandelijkse prijzen (output- en input-)",
+      "periode": "m-2026-01"
+    },
+    {
+      "datum_text": "18 maart 2026",
+      "naam": "Sterfte",
+      "periode": "m-2026-02"
+    },
+    {
+      "datum_text": "24 maart 2026",
+      "naam": "Maandevolutie van de btw-plichtige ondernemingen",
+      "periode": "m-2026-01"
+    },
+    {
+      "datum_text": "26 maart 2026",
+      "naam": "Verweduwing",
+      "periode": "y-2024"
+    },
+    {
+      "datum_text": "26 maart 2026",
+      "naam": "Wettelijke samenwoning",
+      "periode": "y-2024"
+    },
+    {
+      "datum_text": "30 maart 2026",
+      "naam": "Consumptieprijsindex – Gezondheidsindex",
+      "periode": "m-2026-03"
+    },
+    {
+      "datum_text": "10 april 2026",
+      "naam": "Maandelijks indexcijfer van de landbouwprijzen en gemiddelde maandelijkse prijzen (output- en input-)",
+      "periode": "m-2026-02"
+    },
+    {
+      "datum_text": "15 april 2026",
+      "naam": "Sterfte",
+      "periode": "m-2026-03"
+    },
+    {
+      "datum_text": "23 april 2026",
+      "naam": "Maandevolutie van de btw-plichtige ondernemingen",
+      "periode": "m-2026-02"
+    },
+    {
+      "datum_text": "29 april 2026",
+      "naam": "Consumptieprijsindex – Gezondheidsindex",
+      "periode": "m-2026-04"
+    },
+    {
+      "datum_text": "13 mei 2026",
+      "naam": "Sterfte",
+      "periode": "m-2026-04"
+    },
+    {
+      "datum_text": "15 mei 2026",
+      "naam": "Maandelijks indexcijfer van de landbouwprijzen en gemiddelde maandelijkse prijzen (output- en input-)",
+      "periode": "m-2026-03"
+    },
+    {
+      "datum_text": "22 mei 2026",
+      "naam": "Maandevolutie van de btw-plichtige ondernemingen",
+      "periode": "m-2026-03"
+    },
+    {
+      "datum_text": "26 mei 2026",
+      "naam": "Geboorten",
+      "periode": "t-2026-01"
+    },
+    {
+      "datum_text": "28 mei 2026",
+      "naam": "Consumptieprijsindex – Gezondheidsindex",
+      "periode": "m-2026-05"
+    },
+    {
+      "datum_text": "10 juni 2026",
+      "naam": "Overlijdens",
+      "periode": "y-2026"
+    },
+    {
+      "datum_text": "10 juni 2026",
+      "naam": "Geboorten",
+      "periode": "Y-2025"
+    },
+    {
+      "datum_text": "12 juni 2026",
+      "naam": "Maandelijks indexcijfer van de landbouwprijzen en gemiddelde maandelijkse prijzen (output- en input-)",
+      "periode": "m-2026-04"
+    },
+    {
+      "datum_text": "16 juni 2026",
+      "naam": "Sterfte",
+      "periode": "m-2026-05"
+    },
+    {
+      "datum_text": "24 juni 2026",
+      "naam": "Maandevolutie van de btw-plichtige ondernemingen",
+      "periode": "m-2026-04"
+    },
+    {
+      "datum_text": "29 juni 2026",
+      "naam": "Consumptieprijsindex – Gezondheidsindex",
+      "periode": "m-2026-06"
+    },
+    {
+      "datum_text": "10 juli 2026",
+      "naam": "Maandelijks indexcijfer van de landbouwprijzen en gemiddelde maandelijkse prijzen (output- en input-)",
+      "periode": "m-2026-05"
+    },
+    {
+      "datum_text": "16 juli 2026",
+      "naam": "Sterfte",
+      "periode": "m-2026-06"
+    },
+    {
+      "datum_text": "29 juli 2026",
+      "naam": "Maandevolutie van de btw-plichtige ondernemingen",
+      "periode": "m-2026-05"
+    },
+    {
+      "datum_text": "30 juli 2026",
+      "naam": "Consumptieprijsindex – Gezondheidsindex",
+      "periode": "m-2026-07"
+    },
+    {
+      "datum_text": "11 augustus 2026",
+      "naam": "Maandelijks indexcijfer van de landbouwprijzen en gemiddelde maandelijkse prijzen (output- en input-)",
+      "periode": "m-2026-06"
+    },
+    {
+      "datum_text": "25 augustus 2026",
+      "naam": "Maandevolutie van de btw-plichtige ondernemingen",
+      "periode": "m-2026-06"
+    },
+    {
+      "datum_text": "28 augustus 2026",
+      "naam": "Consumptieprijsindex – Gezondheidsindex",
+      "periode": "m-2026-08"
+    },
+    {
+      "datum_text": "17 september 2026",
+      "naam": "Sterfte",
+      "periode": "m-2026-07+08"
+    },
+    {
+      "datum_text": "22 september 2026",
+      "naam": "Geboorten",
+      "periode": "t-2026-02"
+    },
+    {
+      "datum_text": "29 september 2026",
+      "naam": "Consumptieprijsindex – Gezondheidsindex",
+      "periode": "m-2026-09"
+    },
+    {
+      "datum_text": "12 oktober 2026",
+      "naam": "Maandevolutie van de btw-plichtige ondernemingen",
+      "periode": "m-2026-07"
+    },
+    {
+      "datum_text": "14 oktober 2026",
+      "naam": "Sterfte",
+      "periode": "m-2026-09"
+    },
+    {
+      "datum_text": "22 oktober 2026",
+      "naam": "Maandevolutie van de btw-plichtige ondernemingen",
+      "periode": "m-2026-08"
+    },
+    {
+      "datum_text": "29 oktober 2026",
+      "naam": "Consumptieprijsindex – Gezondheidsindex",
+      "periode": "m-2026-10"
+    },
+    {
+      "datum_text": "17 november 2026",
+      "naam": "Sterfte",
+      "periode": "m-2026-10"
+    },
+    {
+      "datum_text": "24 november 2026",
+      "naam": "Maandevolutie van de btw-plichtige ondernemingen",
+      "periode": "m-2026-09"
+    },
+    {
+      "datum_text": "25 november 2026",
+      "naam": "Geboorten",
+      "periode": "t-2026-03"
+    },
+    {
+      "datum_text": "27 november 2026",
+      "naam": "Consumptieprijsindex – Gezondheidsindex",
+      "periode": "m-2026-11"
+    },
+    {
+      "datum_text": "7 december 2026",
+      "naam": "Indexcijfer van omzet voor de dienstensector volgens de btw-aangiften",
+      "periode": "m-2025-10"
+    },
+    {
+      "datum_text": "16 december 2026",
+      "naam": "Sterfte",
+      "periode": "m-2026-11"
+    },
+    {
+      "datum_text": "22 december 2026",
+      "naam": "Maandevolutie van de btw-plichtige ondernemingen",
+      "periode": "m-2026-10"
+    },
+    {
+      "datum_text": "23 december 2026",
+      "naam": "Consumptieprijsindex – Gezondheidsindex",
+      "periode": "m-2026-12"
+    }
+  ],
+  "total_entries": 57
+}
